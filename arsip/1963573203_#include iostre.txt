@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+class Barang {
+public:
+    string nama;
+    double harga;
+    int jumlah;
+public:
+    Barang(const string& nama, double harga) : nama(nama), harga(harga), jumlah(0) {}
+    double hitungTotalBarang() {
+        return harga * jumlah;
+    }
+    virtual void rincian() {
+        cout << nama << ": " << jumlah << endl;
+    }
+};
+class Makanan : public Barang {
+public:
+    Makanan(const string& nama, double harga) : Barang(nama, harga) {}
+    void rincian() override {
+        cout << "Makanan: ";
+        Barang::rincian();
+    }
+};
+class Minuman : public Barang {
+public:
+    Minuman(const string& nama, double harga) : Barang(nama, harga) {}
+
+    void rincian() override {
+
+        Barang::rincian();
+    }
+};
+class Beli {
+protected:
+    double uang;
+    double totalPembelian;
+public:
+    Beli(double uang) : uang(uang), totalPembelian(0) {}
+    virtual void membeli() = 0;
+};
+class PembelianBarang : public Beli {
+public:
+    PembelianBarang(double uang) : Beli(uang) {}
+    void membeli() override {
+        Makanan makanan("Makanan", 10000);
+        Minuman minuman("Minuman", 5000);
+        cout << "Menu:" << endl;
+        cout << "1. " << makanan.nama << " Rp" << makanan.harga << endl;
+        cout << "2. " << minuman.nama << " Rp" << minuman.harga << endl;
+        cout << "3. selesai " << endl;
+        while (true) {
+            int pilihan;
+            cout << "Pilih menu : ";
+            cin >> pilihan;
+
+            if (pilihan == 3) {
+                break;
+            } else if (pilihan == 1) {
+                cout << "Jumlah " << makanan.nama << " yang ingin dibeli: ";
+                cin >> makanan.jumlah;
+            } else if (pilihan == 2) {
+                cout << "Jumlah " << minuman.nama << " yang ingin dibeli: ";
+                cin >> minuman.jumlah;
+            } else {
+                cout << "Menu tidak ada!" << endl;
+            }
+        }
+        int pajak;
+        totalPembelian = makanan.hitungTotalBarang() + minuman.hitungTotalBarang();
+        if (totalPembelian > 20000){
+
+        pajak = totalPembelian * 0.05;
+            totalPembelian += pajak;
+
+
+        }
+
+
+        cout << "\nRincian Pembelian:" << endl;
+        makanan.rincian();
+        minuman.rincian();
+        cout << "Total Pembelian: Rp" << totalPembelian <<" dikenakan pajak"<<" 5 % = "<<pajak<< endl;
+        cout << "Sisa uang adalah: Rp" << uang - totalPembelian << endl;
+    }
+};
+
+int main() {
+    PembelianBarang pb(300000);
+    cout << "Uang Rp300.000" << endl;
+    pb.membeli();
+
+    return 0;
+}
